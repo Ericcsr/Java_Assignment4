@@ -15,6 +15,7 @@ public class Message {
 	JButton button;
 	JDialog dialog;
 	JFrame frame;
+	UserActionListener actioner;
 	/**
 	 * Constructor init the Message with first message and frame to hold it
 	 * 
@@ -27,6 +28,8 @@ public class Message {
 		longest = msg.length();
 		this.frame = frame;
 		this.counter = 1;
+		button = new JButton("OK");
+		button.addActionListener(new ButtonClick());
 	}
 	
 	/**
@@ -58,10 +61,10 @@ public class Message {
 		else
 			shifter = 0;
 		dialog = new JDialog(this.frame,"Message");
-		button = new JButton("OK");
+		
 	
 		button.setBounds(100+shifter, 40+20*counter, 100, 30);
-		button.addActionListener(new ButtonClick());
+		
 		Icon icon = new Icon();
 		icon.setBounds(20, 50, 30, 30);
 		JPanel panel = new JPanel();
@@ -104,7 +107,7 @@ public class Message {
 	}
 	
 	
-	private class ButtonClick implements ActionListener
+	private class ButtonClick extends UserActionListener
 	{
 
 		@Override
@@ -113,6 +116,12 @@ public class Message {
 			dialog.setVisible(false);
 		}
 		
+	}
+	
+	public void attachListener(UserActionListener l)
+	{
+		this.actioner = l;
+		button.addActionListener(l);
 	}
 	
 	public static void main(String[] args)

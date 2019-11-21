@@ -11,6 +11,7 @@ public class Card {
 	private int value;
 	private ImageIcon front;
 	static public ImageIcon back;
+	private String fname;
 	private int spc_flag = 0; // If it is special card 
 	
 	/**
@@ -32,6 +33,7 @@ public class Card {
 	public Card(String fname,int value)
 	{
 		this.front = new ImageIcon("doc/"+fname);
+		this.fname = fname;
 		this.value = value;
 		if(value>10)
 		{
@@ -45,6 +47,7 @@ public class Card {
 	 */
 	public ImageIcon getFront()
 	{
+		this.front = new ImageIcon("doc/"+fname);
 		return this.front;
 	}
 	/**

@@ -20,7 +20,11 @@ public class Mainframe {
 	
 	private JPanel mypanel = new JPanel();
 	private JPanel dealerpanel = new JPanel();
-	private JPanel cardpanel = new JPanel();
+	private JPanel mainpanel = new JPanel();
+	private JPanel buttonContainer;
+	private JPanel input;
+	private JPanel operation;
+	private JMenuBar menubar;
 	
 	ArrayList<JLabel> mylabels = new ArrayList<JLabel>();
 	ArrayList<JLabel> dealerlabels = new ArrayList<JLabel>();
@@ -70,28 +74,29 @@ public class Mainframe {
 		frame.getContentPane().setBackground(Color.GREEN);
 		
 		// Add main panel
-		JPanel mainpanel = new JPanel();
+		//JPanel mainpanel = new JPanel();
 		mainpanel.setLayout(new GridLayout(5,1)); // Vertically 5 horizontally one
 		mainpanel.setBackground(Color.GREEN);
 		
 		//cardpanel.setLayout(new BoxLayout(cardpanel,1));
 		//cardpanel.setBackground(Color.GREEN);
-		mypanel.setLayout(new FlowLayout());
-		mypanel.setBackground(Color.GREEN);
-		dealerpanel.setLayout(new FlowLayout());
-		dealerpanel.setBackground(Color.GREEN);
+		//mypanel.setLayout(new FlowLayout());
+		//mypanel.setBackground(Color.GREEN);
+		//dealerpanel.setLayout(new FlowLayout());
+		//dealerpanel.setBackground(Color.GREEN);
 		//cardpanel.setLayout(new BoxLayout(cardpanel,1));
 		//cardpanel.add(dealerpanel);
 		//cardpanel.add(mypanel);
 		mainpanel.add(dealerpanel);
 		mainpanel.add(mypanel);
+		
 		for(int i=0;i<3;i++)
 		{
 			this.mycard[i] = cardlist.getCard();
 			this.dealercard[i] = cardlist.getCard();
 		}
-		displayBack();
-		JMenuBar menubar = new JMenuBar();
+		
+		menubar = new JMenuBar();
 		JMenu ctrl_menu  = new JMenu("Control");
 		JMenuItem menuItem = new JMenuItem("Exit");
 		menuItem.addActionListener(new ExitListener());
@@ -105,7 +110,7 @@ public class Mainframe {
 		menuItem.addActionListener(new RulesListener());
 		help_menu.add(menuItem);
 		menubar.add(help_menu);
-		JPanel buttonContainer = new JPanel();
+		buttonContainer = new JPanel();
 		//buttonContainer.setLayout();
 		buttonContainer.setBackground(Color.GREEN);
 		JButton cardbutton = new JButton("Replace Card 1");
@@ -122,13 +127,12 @@ public class Mainframe {
 		cardbutton.setBackground(Color.GREEN);
 		cardbutton.addActionListener(new Card3Listener());
 		buttonContainer.add(cardbutton);
-		JPanel service = new JPanel();
-		service.setLayout(new BorderLayout());
-		service.add(buttonContainer,BorderLayout.NORTH);
-		JPanel operation = new JPanel();
-		operation.setLayout(new BorderLayout());
-		JPanel input = new JPanel();
-		
+		//JPanel service = new JPanel();
+		//service.setLayout(new BorderLayout());
+		mainpanel.add(buttonContainer); // Add to main function
+		//operation.setLayout();
+		input = new JPanel();
+		input.setPreferredSize(new Dimension(500,140));
 		//input.setLayout(new BoxLayout(input,0));
 		JLabel head = new JLabel("Bet:$");
 		betfield = new JTextField(20);
@@ -142,41 +146,24 @@ public class Mainframe {
 		input.add(start);
 		input.add(result);
 		
-		operation.add(input,BorderLayout.NORTH);
-		service.add(operation,BorderLayout.CENTER);
+		mainpanel.add(input);
+		//service.add(operation,BorderLayout.CENTER);
+		operation = new JPanel();
 		prompt = new JLabel("Please place Your bet!The amount of money you have:$"+this.moneybank,JLabel.CENTER);
 		prompt.setSize(500, 200);
-		operation.add(prompt,BorderLayout.CENTER);
-		prompt.setPreferredSize(new Dimension(500,150));
+		prompt.setPreferredSize(new Dimension(500,80));
+		operation.add(prompt);
+		mainpanel.add(operation);
+		frame.setJMenuBar(menubar);
+		displayBack();
+		frame.add(mainpanel);
 		
-		frame.add(cardpanel,BorderLayout.CENTER);
-		frame.add(menubar,BorderLayout.NORTH);
-		frame.add(service,BorderLayout.SOUTH);
 		frame.setSize(500,600);
 		frame.setVisible(true);
-		int state = 0;
-		while(true)
-		{
-			try
-			{
-				Thread.sleep(100);
-				frame.repaint();
-				if(state == 0)
-				{
-					state =1;
-					frame.setSize(500,601);
-				}
-				else
-				{
-					state =0;
-					frame.setSize(500,600);
-				}
-			}
-			catch(Exception e)
-			{
-				
-			}
-		}
+		//int state = 0;
+		
+		
+		
 	}
 	
 	class ExitListener implements ActionListener
@@ -225,7 +212,7 @@ public class Mainframe {
 			moneybank = 100;
 			prompt.setText("Please place Your bet!The amount of money you have:$"+moneybank);
 			displayBack();
-			cardpanel.repaint();
+			//cardpanel.repaint();
 			frame.repaint();
 			buttonflag[0] = 0;
 			buttonflag[1] = 0;
@@ -261,7 +248,6 @@ public class Mainframe {
 			betvalue = (int)value;
 			prompt.setText("Your current bet is :$"+betvalue+" Amount of money you have:$"+moneybank);
 			displayFront(0);
-			cardpanel.repaint();
 			mypanel.repaint();
 			first_flag++;
 			start_flag = 1;
@@ -276,16 +262,11 @@ public class Mainframe {
 			if(first_flag<=2 && buttonflag[0]==0 && start_flag ==1)
 			{
 				buttonflag[0]=1;
+				Card buffer = cardlist.getCard();
 				cardlist.insertCard(mycard[0]);
-				mycard[0] = cardlist.getCard();
+				mycard[0] = buffer;
 				prompt.setText("Your current bet is :$"+betvalue+" Amount of money you have:$"+moneybank);
 				displayFront(0);
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				//cardpanel.repaint();
 				//mypanel.repaint();
 				mypanel.setVisible(true);
@@ -306,14 +287,8 @@ public class Mainframe {
 				mycard[1] = cardlist.getCard();
 				prompt.setText("Your current bet is :$"+betvalue+" Amount of money you have:$"+moneybank);
 				displayFront(0);
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				//cardpanel.repaint();
-				//mypanel.repaint();
+				mypanel.repaint();
 				mypanel.setVisible(true);
 				first_flag++;
 			}
@@ -331,15 +306,9 @@ public class Mainframe {
 				mycard[2] = cardlist.getCard();
 				prompt.setText("Your current bet is :$"+betvalue+" Amount of money you have:$"+moneybank);
 				displayFront(0);
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				//cardpanel.repaint();
 				//frame.repaint();
-				//mypanel.getIgnoreRepaint();
+				mypanel.getIgnoreRepaint();
 				mypanel.setVisible(true);
 				first_flag++;
 			}
@@ -363,6 +332,7 @@ public class Mainframe {
 			if(result == true)
 			{
 				Message msg = new Message("Congratulation You win this round!",frame);
+				msg.attachListener(new refreshGame());
 				msg.display();
 				moneybank += betvalue;
 				prompt.setText("Please place Your bet!The amount of money you have:$"+moneybank);
@@ -376,6 +346,7 @@ public class Mainframe {
 					Message msg = new Message("Game Over!",frame);
 					msg.AddMessage("You have lost all your money,");
 					msg.AddMessage("Please start a new round!");
+					msg.attachListener(new refreshGame());
 					msg.display();
 					prompt.setText("Please place Your bet!The amount of money you have:$"+moneybank);
 				}
@@ -383,10 +354,71 @@ public class Mainframe {
 				{
 					Message msg = new Message("Sorry! The dealer win this round!",frame);
 					prompt.setText("Please place Your bet!The amount of money you have:$"+moneybank);
+					msg.attachListener(new refreshGame());
 					msg.display();
 				}
 			}
 			displayFront(1);
+			
+			//cardpanel.repaint();
+			frame.repaint();
+			buttonflag[0] = 0;
+			buttonflag[1] = 0;
+			buttonflag[2] = 0;
+			start_flag=0;
+		}
+		}
+	}
+	
+	private void displayBack()
+	{
+		JPanel buffer1 = new JPanel();
+		JPanel buffer2 = new JPanel();
+		buffer1.setBackground(Color.GREEN);
+		buffer2.setBackground(Color.GREEN);
+		ImageIcon img = Card.getBack();
+		JLabel label ;
+		// TODO: Resize the label.chongxing
+		for(int i=0;i<3;i++)
+		{
+			label = new JLabel();
+			label.setIcon(img);
+			buffer1.add(label);
+			label = new JLabel();
+			label.setIcon(img);
+			buffer2.add(label);
+		}
+		mypanel = buffer1;
+		dealerpanel = buffer2;
+		this.addAllcomponents();
+		frame.setSize(500,600);
+		
+	}
+	
+	private void displayFront(int flag)
+	{
+		JPanel buffer1 = new JPanel();
+		JPanel buffer2 = new JPanel();
+		buffer1.setBackground(Color.GREEN);
+		buffer2.setBackground(Color.GREEN);
+		for(int i=0;i<3;i++)
+		{
+			buffer1.add(GameHelper.Card2label(mycard[i]));
+			//System.out.println(mycard[i]);
+			if(flag ==1)
+				buffer2.add(GameHelper.Card2label(dealercard[i]));
+		}
+		mypanel = buffer1;
+		if(flag == 1)
+			dealerpanel = buffer2;
+		mainpanel.repaint();
+		this.addAllcomponents();
+		frame.setSize(500,600);
+	}
+	class refreshGame extends UserActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
 			for(int i=0;i<3;i++)
 			{
 				Card buf = mycard[i];
@@ -400,52 +432,23 @@ public class Mainframe {
 				dealercard[i] = cardlist.getCard();
 				cardlist.insertCard(buf);
 			}
-			cardpanel.repaint();
+			displayBack();
 			frame.repaint();
-			buttonflag[0] = 0;
-			buttonflag[1] = 0;
-			buttonflag[2] = 0;
-			start_flag=0;
-		}
 		}
 	}
-	
-	private void displayBack()
+	private void addAllcomponents()
 	{
-		mypanel.removeAll();
-		dealerpanel.removeAll();
-		ImageIcon img = Card.getBack();
-		JLabel label ;
-		// TODO: Resize the label.chongxing
-		for(int i=0;i<3;i++)
-		{
-			label = new JLabel();
-			label.setIcon(img);
-			mypanel.add(label);
-			label = new JLabel();
-			label.setIcon(img);
-			dealerpanel.add(label);
-		}
-		cardpanel.add(dealerpanel);
-		cardpanel.add(mypanel);
-	}
-	
-	private void displayFront(int flag)
-	{
-		mypanel.removeAll();
-		if(flag==1)
-			dealerpanel.removeAll();
-		for(int i=0;i<3;i++)
-		{
-			mypanel.add(GameHelper.Card2label(mycard[i]));
-			//System.out.println(mycard[i]);
-			if(flag ==1)
-				dealerpanel.add(GameHelper.Card2label(dealercard[i]));
-		}
-		cardpanel.removeAll();
-		cardpanel.add(dealerpanel);
-		cardpanel.add(mypanel);
-		mypanel.setIgnoreRepaint(false);
-		//mypanel.repaint();
+		//frame.removeAll();
+		mainpanel.removeAll();
+		mainpanel.add(dealerpanel);
+		mainpanel.add(mypanel);
+		mainpanel.add(buttonContainer);
+		mainpanel.add(input);
+		mainpanel.add(operation);
+		mainpanel.repaint();
+		frame.setJMenuBar(menubar);
+		frame.add(mainpanel);
+		frame.setSize(500,600);
+		frame.setVisible(true);
 	}
 }
